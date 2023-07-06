@@ -42,4 +42,14 @@ public class WebsiteController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteWebsite(@PathVariable("id") Long id) {
+        try {
+            repo.deleteById(id);
+            return ResponseEntity.ok("Screenshot deleted successfully");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

@@ -76,4 +76,8 @@ public class WebsiteRepository {
             return null;
         }
     }
+
+    public void deleteById(Long id) {
+        repo.deleteById(id);
+    }
 }
