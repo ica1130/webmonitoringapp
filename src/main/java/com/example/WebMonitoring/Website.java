@@ -14,6 +14,9 @@ public class Website {
     @Column(name = "url")
     private String url;
 
+    @Column(name = "width")
+    private Integer width;
+
     @Lob
     @Column(name = "screenshot_image")
     private byte[] screenshotImage;
@@ -35,6 +38,14 @@ public class Website {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
     }
 
     public byte[] getScreenshotImage() {

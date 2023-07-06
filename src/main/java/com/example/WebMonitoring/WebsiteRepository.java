@@ -9,7 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class WebsiteRepository {
@@ -21,18 +23,26 @@ public class WebsiteRepository {
         this.repo = repo;
     }
 
-    public List<Website> findAll(){
+    public List<Website> findAll() {
         return repo.findAll();
     }
 
     public Website getWebsiteScreenshot(String websiteUrl, String screenWidth) {
         try {
+            // Validate the input
+            if (screenWidth == null || screenWidth.isEmpty()) {
+                throw new IllegalArgumentException("Invalid Screen Width");
+            }
+            if (websiteUrl == null || websiteUrl.isEmpty()) {
+                throw new IllegalArgumentException("Invalid Website URL");
+            }
+
             // @param {String} $token - String containing your API Key
             // @param {String} $url - Encoded URI string container the URI you're targeting
             // @param {Integer} $width - Integer indicating the width of your target render
             String token = "A9TW0M3-VGGMX8G-GQ2QEQZ-Q7X0ERA";
             String url = URLEncoder.encode(websiteUrl, "UTF-8");
-            String width = screenWidth;
+            int width = Integer.parseInt(screenWidth);
 
             // Construct the query params and URL
             String query = "https://shot.screenshotapi.net/screenshot";
@@ -55,6 +65,7 @@ public class WebsiteRepository {
 
             Website website = new Website();
             website.setUrl(websiteUrl);
+            website.setWidth(width);
             website.setScreenshotImage(screenshotBytes);
             repo.save(website);
 

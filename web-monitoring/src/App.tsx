@@ -1,8 +1,20 @@
 import { useEffect, useState } from 'react';
 import { getAllWebsites, takeScreenshot } from './api';
 
+interface Website {
+  id: number;
+  url: string;
+  width: number;
+  screenshotImage: string;
+}
+
+interface WebsiteGallery {
+  url: string;
+  screenshots: { [key: number]: string };
+}
+
 function App() {
-  const [websites, setWebsites] = useState<Website[]>([]);
+  const [websiteGalleries, setWebsiteGalleries] = useState<WebsiteGallery[]>([]);
   const [url, setUrl] = useState('');
   const [width, setWidth] = useState('1920');
 
@@ -18,7 +30,29 @@ function App() {
     try {
       await takeScreenshot(url, width);
       const response = await getAllWebsites();
-      setWebsites(response.data);
+      const websites: Website[] = response.data;
+
+      // Group websites by URL
+      const groupedWebsites: { [key: string]: Website[] } = {};
+      websites.forEach((website) => {
+        if (groupedWebsites[website.url]) {
+          groupedWebsites[website.url].push(website);
+        } else {
+          groupedWebsites[website.url] = [website];
+        }
+      });
+
+      // Create website galleries
+      const galleries: WebsiteGallery[] = [];
+      for (const url in groupedWebsites) {
+        const screenshots: { [key: number]: string } = {};
+        groupedWebsites[url].forEach((website) => {
+          screenshots[website.width] = website.screenshotImage;
+        });
+        galleries.push({ url, screenshots });
+      }
+
+      setWebsiteGalleries(galleries);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -28,7 +62,29 @@ function App() {
     const fetchWebsites = async () => {
       try {
         const response = await getAllWebsites();
-        setWebsites(response.data);
+        const websites: Website[] = response.data;
+
+        // Group websites by URL
+        const groupedWebsites: { [key: string]: Website[] } = {};
+        websites.forEach((website) => {
+          if (groupedWebsites[website.url]) {
+            groupedWebsites[website.url].push(website);
+          } else {
+            groupedWebsites[website.url] = [website];
+          }
+        });
+
+        // Create website galleries
+        const galleries: WebsiteGallery[] = [];
+        for (const url in groupedWebsites) {
+          const screenshots: { [key: number]: string } = {};
+          groupedWebsites[url].forEach((website) => {
+            screenshots[website.width] = website.screenshotImage;
+          });
+          galleries.push({ url, screenshots });
+        }
+
+        setWebsiteGalleries(galleries);
       } catch (error) {
         console.error('Error:', error);
       }
@@ -51,22 +107,25 @@ function App() {
         </select>
         <button onClick={handleGetScreenshot}>Get screenshot</button>
       </div>
-      <section className="gallery">
-        {websites.map((website) => (
-          <article key={website.id} className="article">
-            <h2>{website.url}</h2>
-            <div className="screenshot-links">
-              {website.screenshotWidths.map((width) => (
-                <a key={width} href={website.screenshotUrls[width]} target="_blank" rel="noopener noreferrer">
-                  {width}
-                </a>
-              ))}
-            </div>
-          </article>
-        ))}
-      </section>
+      {websiteGalleries.map((gallery) => (
+        <section key={gallery.url} className="gallery">
+          <h2>{gallery.url}</h2>
+          <div className="screenshot-links">
+            {Object.entries(gallery.screenshots).map(([width, screenshotImage]) => (
+              <a
+                key={width}
+                href={screenshotImage}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={`data:image/png;base64,${screenshotImage}`} alt="Screenshot" />
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }
-
-export default App;
+  
+  export default App;

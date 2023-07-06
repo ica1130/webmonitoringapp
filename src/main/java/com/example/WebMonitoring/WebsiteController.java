@@ -17,6 +17,9 @@ public class WebsiteController {
         this.repo = repo;
     }
 
+    @Autowired
+    private WebsiteDbRepository dbRepository;
+
     @GetMapping
     public ResponseEntity<List<Website>> getAllWebsites() {
         List<Website> websites = repo.findAll();
@@ -24,14 +27,19 @@ public class WebsiteController {
     }
 
     @PostMapping
-    public ResponseEntity<Website> takeScreenshot(@RequestBody String websiteUrl, @RequestParam String screenWidth) {
+    public ResponseEntity<Website> takeScreenshot(@RequestBody WebsiteDTO websiteDTO) {
         try {
+            String websiteUrl = websiteDTO.getWebsiteUrl();
+            String screenWidth = websiteDTO.getScreenWidth();
             Website website = repo.getWebsiteScreenshot(websiteUrl, screenWidth);
-            return ResponseEntity.ok(website);
+            if (website != null) {
+                return ResponseEntity.ok(website);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 }
