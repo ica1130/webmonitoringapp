@@ -136,19 +136,21 @@ function App() {
         </select>
         <button onClick={handleGetScreenshot}>Get screenshot</button>
       </form>
+      <div className="container">
       {websiteGalleries.map((gallery) => (
         <section key={gallery.url} className="gallery">
           <h2>{gallery.url}</h2>
-          <div className="screenshot-links">
+          <article className="screenshot-links">
           {Object.entries(gallery.screenshots).map(([id, screenshotImage]) => (
-            <div key={id}>
+            <article key={id}>
                 <img className="whatever" src={`data:image/png;base64,${screenshotImage}`} alt="Screenshot" />
-              <button onClick={() => handleDeleteScreenshot(parseInt(id))}>Delete</button>
-            </div>
+              <button className="delete" onClick={() => handleDeleteScreenshot(parseInt(id))}>Delete</button>
+            </article>
           ))}
-          </div>
+          </article>
         </section>
       ))}
+      </div>
     </div>
   );
 }
