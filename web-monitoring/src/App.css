@@ -56,3 +56,12 @@ section {
     margin-bottom: 15px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
 }
+
+.whatever {
+  width: 700px;
+  transition: all ease 0.5s;
+}
+
+.whatever:hover {
+  width: 1920px;
+}

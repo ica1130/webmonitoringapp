@@ -89,7 +89,7 @@ function App() {
         for (const url in groupedWebsites) {
           const screenshots: { [key: number]: string } = {};
           groupedWebsites[url].forEach((website) => {
-            screenshots[website.width] = website.screenshotImage;
+            screenshots[website.id] = website.screenshotImage;
           });
           galleries.push({ url, screenshots });
         }
@@ -124,8 +124,8 @@ function App() {
 
   return (
     <div>
-      <h1>WEB MONITOR APP</h1>
-      <div>
+      <h1>WEB MONITOR</h1>
+      <form>
         <input type="text" value={url} onChange={handleUrlChange} placeholder="Enter website URL" />
         <select value={width} onChange={handleWidthChange}>
           <option value="280">280</option>
@@ -135,16 +135,14 @@ function App() {
           <option value="1920">1920</option>
         </select>
         <button onClick={handleGetScreenshot}>Get screenshot</button>
-      </div>
+      </form>
       {websiteGalleries.map((gallery) => (
         <section key={gallery.url} className="gallery">
           <h2>{gallery.url}</h2>
           <div className="screenshot-links">
           {Object.entries(gallery.screenshots).map(([id, screenshotImage]) => (
             <div key={id}>
-              <a href={screenshotImage} target="_blank" rel="noopener noreferrer">
-                <img src={`data:image/png;base64,${screenshotImage}`} alt="Screenshot" />
-              </a>
+                <img className="whatever" src={`data:image/png;base64,${screenshotImage}`} alt="Screenshot" />
               <button onClick={() => handleDeleteScreenshot(parseInt(id))}>Delete</button>
             </div>
           ))}
