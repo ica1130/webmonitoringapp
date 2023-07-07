@@ -19,7 +19,7 @@ interface WebsiteGallery {
 function App() {
   const [websiteGalleries, setWebsiteGalleries] = useState<WebsiteGallery[]>([]);
   const [url, setUrl] = useState('');
-  const [width, setWidth] = useState('1920');
+  const [width, setWidth] = useState('');
   const BASE_URL = 'http://localhost:3000/api/websites';
 
   const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
