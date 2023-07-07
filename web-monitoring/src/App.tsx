@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getAllWebsites, takeScreenshot } from './api';
+import './App.css';
 import axios from 'axios';
 
 interface Website {
